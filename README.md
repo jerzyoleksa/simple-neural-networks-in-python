@@ -1,6 +1,6 @@
 # Neural networks handwritten letters recognition
 
-[source]
+[source]  
 www: http://neuralnetworksanddeeplearning.com/chap1.html  
 git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 
