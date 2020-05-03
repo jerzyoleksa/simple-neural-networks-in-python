@@ -16,5 +16,6 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 </p>
 
 - 28x28 images from mnist make 784 input neurons, each for every pixel of the image
+- backprop function includes the feed forward phase which can be misleading
 - 1st layer(input) consists of 784 neurons, 2nd layer(hidden) of 30 neurons and 3rd layer(output) of 10 neurons
 - activations are outputs of layers, at the end of feed forward phase activations is a 3 element list of 784, 30 and 10 sized columns
