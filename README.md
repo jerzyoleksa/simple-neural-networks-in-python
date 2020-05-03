@@ -11,5 +11,5 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - Simplified code and its logical structure  
 
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn.png">
+  <img src="https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn.png">
 </p>
