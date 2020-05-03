@@ -15,4 +15,4 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
   <img src="https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn2.png">
 </p>
 
-- 1st layer(input) consists of 784 neurons, 2nd layer(hidden) of 30 neurons and 3rd layer(ouput) of 10 neurons
+- 1st layer(input) consists of 784 neurons, 2nd layer(hidden) of 30 neurons and 3rd layer(output) of 10 neurons
