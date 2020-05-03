@@ -10,6 +10,7 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - Added script for printing results and showing matlab graph
 - Simplified code and its logical structure  
 
+<h1>Michael Nielsen's famous code explanation</h1>
 <p align="center">
   <img src="https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn2.png">
 </p>
