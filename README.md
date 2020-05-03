@@ -10,4 +10,6 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - Added script for printing results and showing matlab graph
 - Simplified code and its logical structure  
 
-![Neural Network with 1 hidden layer](https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn.png)
+<p align="center">
+  <img width="50%" height="50%" src="https://github.com/jerzyoleksa/simple-neural-networks-in-python/blob/master/images/nn.png">
+</p>
