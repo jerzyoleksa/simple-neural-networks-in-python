@@ -18,5 +18,7 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - 28x28 images from mnist make 784 input neurons, each for every pixel of the image
 - backprop function includes the feed forward phase which can be misleading
 - 1st layer(input) consists of 784 neurons, 2nd layer(hidden) of 30 neurons and 3rd layer(output) of 10 neurons
-- 'activations' are outputs of layers, at the end of feed forward phase activations is a 3 element list of 784, 30 and 10 sized columns
-- first column of 'activations' variable is just an input - x, the next two are the calculated outputs
+- activations are outputs of layers, at the end of feed forward phase activations is a 3 element list of 784, 30 and 10 sized columns
+- first column of activations variable is just an input - x, the next two are the calculated outputs
+- in python tuple is just a pair of values, zip is a function that creates these pairs
+- nabla word is an unnecessary complication, i would name it updated weights instead
