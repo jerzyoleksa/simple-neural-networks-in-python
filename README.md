@@ -24,3 +24,4 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - first column of activations variable is just an input - x, the next two are the calculated outputs
 - in python tuple is just a pair of values, zip is a function that creates these pairs
 - nabla word is an unnecessary complication, i would name it updated weights instead
+- variable z is the weighted sum of neuron inputs plus one bias value
