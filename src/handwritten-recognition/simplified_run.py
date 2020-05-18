@@ -13,6 +13,7 @@ print('after training the list size should be 0:',test_data.__len__())
 
 import numpy as np
 imgnr = np.random.randint(0,10000)
+imgnr = 7320;
 
 #need to reload the test_data again, becauuse training empties the test_data list
 training_data, validation_data, test_data = mnist_loader.load_data_wrapper();

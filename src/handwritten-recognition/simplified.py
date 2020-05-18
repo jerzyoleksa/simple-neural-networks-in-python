@@ -3,6 +3,7 @@ import random
 import numpy as np
 from test.test_winreg import test_data
 from matplotlib import pyplot as plt
+import pickle
 
 class NetSimplified(object):
 
@@ -14,9 +15,29 @@ class NetSimplified(object):
         and the third layer 1 neuron."""
         self.num_layers = len(sizes)
         self.sizes = sizes
+        
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
-        self.weights = [np.random.randn(y, x)
-                        for x, y in zip(sizes[:-1], sizes[1:])]
+        self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
+        
+#         pickle_out = open("dict.pickle2","wb")
+#         pickle.dump(self.biases, pickle_out)
+#         pickle_out.close()
+
+
+        #load serialized objects to avoid random values
+        pickle_in = open("dict.pickle","rb")
+        self.weights = pickle.load(pickle_in)        
+        pickle_in = open("dict.pickle2","rb")
+        self.biases = pickle.load(pickle_in)
+       
+        
+       
+        
+#         print(self.biases);
+#         print(self.weights);
+        
+
+        
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
@@ -45,44 +66,71 @@ class NetSimplified(object):
         print('train (SGD).n=',n)
         print('train (SGD).mini_batch_size=',mini_batch_size)
 
+        pickle_in = open("dict.pickle3","rb")
+        samplearr = pickle.load(pickle_in) 
+        
+        
+#         print(self.weights[0][10][4],'/END')
+        
         for k in range(50000): 
              
-            self.update_mini_batch(random.sample(training_data, 10), eta)
-            #if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
-              
+            sample = samplearr[k]
+#             sample = random.sample(training_data, 10);
+#             samplearr.append(sample);
+            self.update_mini_batch(sample, eta)
             
+#             if k % 100 == 0:
+#                 print(self.weights[0][10][4])
+#                 sys.exit()        
+            
+            if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
+              
+#         pickle_out = open("dict.pickle3","wb")
+#         pickle.dump(samplearr, pickle_out)
+#         pickle_out.close()    
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
         is the learning rate."""
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        nabla_b = clone_empty_matrix(self.biases)
+        nabla_w = clone_empty_matrix(self.weights)
 #         print('nabla_b[0]', nabla_b[0])
 #         print('self.biases[0]',self.biases[0].shape) self.biases[0] (30, 1)
 #         print('self.weights[0]',self.weights[0].shape) self.weights[0] (30, 784)
         
         for x, y in mini_batch:
-            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
+            bias_change, weight_change = self.backprop(x, y)
         
-            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
-            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
+            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, bias_change)]
+            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, weight_change)]
             
             
-        self.weights = [w-(eta/len(mini_batch))*nw
-                        for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(eta/len(mini_batch))*nb
-                       for b, nb in zip(self.biases, nabla_b)]
+#         self.weights = [w-0.3*nw for w, nw in zip(self.weights, nabla_w)]
+        
+        self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, nabla_w))
+        self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, nabla_b))
+        
+        #self.biases = combine('x - 0.3*y', self.biases, nabla_b)
+        
+        
+#         self.weights[0] = self.weights[0] - 0.3*np.array(nabla_w[0])
+#         self.weights[1] = self.weights[1] - 0.3*np.array(nabla_w[1])
+
+#         self.biases[0] = self.biases[0] - 0.3*np.array(nabla_b[0])
+#         self.biases[1] = self.biases[1] - 0.3*np.array(nabla_b[1])
+       
+       
 
     def backprop(self, x, y):
         """Return a tuple ``(nabla_b, nabla_w)`` representing the
         gradient for the cost function C_x.  ``nabla_b`` and
         ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
         to ``self.biases`` and ``self.weights``."""
-        
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        bias_change = clone_empty_matrix( self.biases )
+        weight_change = clone_empty_matrix( self.weights )
+
         
         
         # feedforward
@@ -125,9 +173,9 @@ class NetSimplified(object):
         #delta equals to derivative of error function (Err)
         #nabla_w is weight increments
         #nabla_w is a weight change 
-        delta = errorf_deriv(outputs[-1], y) * sigmoid_prime(zs[-1])
-        nabla_b[-1] = delta
-        nabla_w[-1] = np.dot(delta, outputs[-2].transpose())
+        delta = errorf_deriv(outputs[-1], y) * sigmoid_deriv(zs[-1])
+        bias_change[-1] = delta
+        weight_change[-1] = np.dot(delta, outputs[-2].transpose())
         
         #-1 means the last layer, the output layer ?
 #         print('1.',delta.shape) #(10, 1)
@@ -145,13 +193,13 @@ class NetSimplified(object):
         # that Python can use negative indices in lists.
         for l in range(2, self.num_layers):
             z = zs[-l]
-            sp = sigmoid_prime(z)
+            sp = sigmoid_deriv(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
-            nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, outputs[-l-1].transpose())
+            bias_change[-l] = delta
+            weight_change[-l] = np.dot(delta, outputs[-l-1].transpose())
             
 #         print("---",mse(outputs[-1],y))
-        return (nabla_b, nabla_w)
+        return (bias_change, weight_change)
 
     def evaluate(self, test_data):
         """Return the number of test inputs for which the neural
@@ -173,5 +221,14 @@ def errorf_deriv(output_activations, y):
 def sigmoid(z):
     return 1.0/(1.0+np.exp(-z))
 
-def sigmoid_prime(z):
+def sigmoid_deriv(z):
     return sigmoid(z)*(1-sigmoid(z))
+
+def clone_empty_matrix(arr):
+    copy_matrix = []    
+    for i in range(0, len(arr)):  
+        copy_matrix.append(np.zeros(arr[i].shape))
+    return copy_matrix
+
+def combine(operation, list1, list2):
+    list(map(lambda x,y: eval(operation), list1, list2))
