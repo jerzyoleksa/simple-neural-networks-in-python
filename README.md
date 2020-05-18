@@ -27,3 +27,4 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - variable z is the weighted sum of neuron inputs plus one bias value
 - why do we use MSE (Mean Squared Error) as a Loss Function ? Not only because we want to sum absolute values of errors, so they dont hide each other when having oposite signs, but also because we want errors to have similar values (rather than having some nodes with very small error and others with very large)
 - and remember, later on after we calculate the Error function we will use gradient descent to minimize it
+- as a java guy, i found "list comprehension" hard to read, so i will try to replace it with a simple, more universal notation
