@@ -94,8 +94,8 @@ class NetSimplified(object):
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
         is the learning rate."""
-        nabla_b = clone_empty_matrix(self.biases)
-        nabla_w = clone_empty_matrix(self.weights)
+#         bias_update = clone_empty_matrix(self.biases)
+#         weight_update = clone_empty_matrix(self.weights)
 #         print('nabla_b[0]', nabla_b[0])
 #         print('self.biases[0]',self.biases[0].shape) self.biases[0] (30, 1)
 #         print('self.weights[0]',self.weights[0].shape) self.weights[0] (30, 784)
@@ -103,17 +103,26 @@ class NetSimplified(object):
         for x, y in mini_batch:
             bias_change, weight_change = self.backprop(x, y)
         
-            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, bias_change)]
-            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, weight_change)]
+#             bias_update = list(map(lambda x,y: x+y, bias_update, bias_change))
+#             weight_update = list(map(lambda x,y: x+y, weight_update, weight_change))
+            
+            self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, bias_change))        
+            self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, weight_change))
             
             
 #         self.weights = [w-0.3*nw for w, nw in zip(self.weights, nabla_w)]
+
+        #THATS why he had a mini_batch length below because he was taking the arythmetic average
+        #from mini_batch for biases and weights, before applying it to weights
+        #!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
         
-        self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, nabla_w))
-        self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, nabla_b))
+
         
-        #self.biases = combine('x - 0.3*y', self.biases, nabla_b)
-        
+
+        #print('sb!!',self.weights)
+        #print('sb!!',self.biases)
         
 #         self.weights[0] = self.weights[0] - 0.3*np.array(nabla_w[0])
 #         self.weights[1] = self.weights[1] - 0.3*np.array(nabla_w[1])
@@ -229,6 +238,3 @@ def clone_empty_matrix(arr):
     for i in range(0, len(arr)):  
         copy_matrix.append(np.zeros(arr[i].shape))
     return copy_matrix
-
-def combine(operation, list1, list2):
-    list(map(lambda x,y: eval(operation), list1, list2))
