@@ -70,25 +70,22 @@ class NetSimplified(object):
         
             if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
     
+    #returns last activations only (outputs)
+#     def feedforward(self, a):
+#         for b, w in zip(self.biases, self.weights):
+#             a = sigmoid(np.dot(w, a)+b)
+#         return a
     
-    def feedforward(self, a):
-        for b, w in zip(self.biases, self.weights):
-            a = sigmoid(np.dot(w, a)+b)
-        return a
+    def feedforward2(self, a, biases, weights):
     
-    def feedforward2(self, x, biases, weights):
-        activation = x
-        activations = []
-        activations.append(x) # list to store all the activations, layer by layer
+        activations = [a]
         zs = [] # list to store all the z vectors, layer by layer
 
-        
         for b, w in zip(biases, weights):
-            z = np.dot(w, activation)+b
+            z = np.dot(w, a)+b
+            a = sigmoid(z) #output
             zs.append(z)
-            activation = sigmoid(z) #output
-            
-            activations.append(activation) #list of activations
+            activations.append(a) #list of activations
             
 #         print('a-s:',activations[0].shape,activations[1].shape,activations[2].shape)
 #         print('z-s:',zs[0].shape,zs[1].shape)    
@@ -138,8 +135,12 @@ class NetSimplified(object):
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in test_data]
+        test_results = []
+        for (x, y) in test_data:
+            
+            activations, zs = self.feedforward2(x, self.biases, self.weights)
+            test_results.append((np.argmax(activations[-1]), y))
+                        
         return sum(int(x == y) for (x, y) in test_results)
 
 # def mse(outputs, expected):
