@@ -6,7 +6,7 @@ training_data, validation_data, test_data = mnist_loader.load_data_wrapper();
 net = simplified.NetSimplified([784,30,10])
 
 
-net.train(training_data, 10, 10, 3.0, test_data=test_data)
+net.train(training_data, test_data=test_data)
 
 test_data = list(test_data)
 print('after training the list size should be 0:',test_data.__len__())
