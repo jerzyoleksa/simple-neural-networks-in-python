@@ -63,7 +63,7 @@ class NetSimplified(object):
 
             for x, y in sample:
                        
-                activations, zs = self.feedforward2(x, self.biases, self.weights)
+                activations, zs = self.feedforward(x, self.biases, self.weights)
                 self.backprop(x, y, self.biases, self.weights, activations, zs)
                 
 
@@ -76,9 +76,9 @@ class NetSimplified(object):
 #             a = sigmoid(np.dot(w, a)+b)
 #         return a
     
-    def feedforward2(self, a, biases, weights):
+    def feedforward(self, a, biases, weights):
     
-        activations = [a]
+        activations = [a] #init list with the first element a
         zs = [] # list to store all the z vectors, layer by layer
 
         for b, w in zip(biases, weights):
@@ -138,7 +138,7 @@ class NetSimplified(object):
         test_results = []
         for (x, y) in test_data:
             
-            activations, zs = self.feedforward2(x, self.biases, self.weights)
+            activations, zs = self.feedforward(x, self.biases, self.weights)
             test_results.append((np.argmax(activations[-1]), y))
                         
         return sum(int(x == y) for (x, y) in test_results)
@@ -147,8 +147,6 @@ class NetSimplified(object):
 #     return sum((y - t) ** 2 for (y, t) in zip(outputs, expected)) / len(outputs)
 #     
 def error_deriv(output_activations, y):
-    """Return the vector of partial derivatives \partial C_x /
-    \partial a for the output activations."""
     return (output_activations-y)
 
 def sigmoid(z):
