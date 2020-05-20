@@ -44,34 +44,31 @@ class NetSimplified(object):
     def train(self, training_data, test_data=None):
      
         #jerzy added to solve python 2 -> 3 issues
-#         test_data = list(test_data)
-#         training_data = list(training_data)
-#         
-#         
-#         if test_data: n_test = len(test_data)
-#         n = len(training_data)
+        #for DEBUG::
+        test_data = list(test_data)
+        training_data = list(training_data)  
+        if test_data: n_test = len(test_data)
+        n = len(training_data)
 
 
         pickle_in = open("dict.pickle3","rb")
         samplearr = pickle.load(pickle_in) 
         
         
-#         print(self.weights[0][10][4],'/END')
+
         
         for k in range(50000): 
              
             sample = samplearr[k]
 
             for x, y in sample:
-                       # feedforward
+                       
                 activations, zs = self.feedforward2(x, self.biases, self.weights)
-                bias_change, weight_change = self.backprop(x, y, self.biases, self.weights, activations, zs)
+                self.backprop(x, y, self.biases, self.weights, activations, zs)
                 
-                #should we move the bias and weight updating into backrop - YES, backprop role is to update weights
-                self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, bias_change))        
-                self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, weight_change))
+
         
-            #if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
+            if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
     
     
     def feedforward(self, a):
@@ -131,7 +128,10 @@ class NetSimplified(object):
             weight_change[-l] = np.dot(delta, activations[-l-1].transpose())
             
 #         print("---",mse(activations[-1],y))
-        return (bias_change, weight_change)
+                        #should we move the bias and weight updating into backrop - YES, backprop role is to update weights
+        self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, bias_change))        
+        self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, weight_change))
+        
 
     def evaluate(self, test_data):
         """Return the number of test inputs for which the neural
