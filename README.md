@@ -29,3 +29,4 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - and remember, later on after we calculate the Error function we will use gradient descent to minimize it
 - as a java guy, i found "list comprehension" i.e. for loops embeded in square brackets - hard to read, so i will try to replace it with a simple, more universal notation
 - using deltas/nablas/delta_nablas as variable names makes the equation unrecognizable
+- it is cleaner to place updating weights inside backrop function rather than in update batch function, since by definition backrop main goal is to update weights
