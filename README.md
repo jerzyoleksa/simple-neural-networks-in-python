@@ -28,5 +28,6 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - why do we use MSE (Mean Squared Error) as a Loss Function ? Not only because we want to sum absolute values of errors, so they dont hide each other when having oposite signs, but also because we want errors to have similar values (rather than having some nodes with very small error and others with very large)
 - and remember, later on after we calculate the Error function we will use gradient descent to minimize it
 - as a java guy, i found "list comprehension" i.e. for loops embeded in square brackets - hard to read, so i will try to replace it with a simple, more universal notation
+- List comprehension provides us with an elegant way of creating lists based on other lists.
 - using deltas/nablas/delta_nablas as variable names makes the equation unrecognizable
 - it is cleaner to place updating weights inside backrop function rather than in update batch function, since by definition backrop main goal is to update weights
