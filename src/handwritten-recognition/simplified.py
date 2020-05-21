@@ -81,13 +81,13 @@ class NetSimplified(object):
         
 
     def evaluate(self, test_data):
-        test_results = []
+        result = []
         for (x, y) in test_data:
             
             activations, zs = self.feedforward(x)
-            test_results.append((np.argmax(activations[-1]), y))
+            result.append((np.argmax(activations[-1]), y))
                         
-        return sum(int(x == y) for (x, y) in test_results)
+        return sum(int(x == y) for (x, y) in result)
 
 # def mse(outputs, expected):
 #     return sum((y - t) ** 2 for (y, t) in zip(outputs, expected)) / len(outputs)
