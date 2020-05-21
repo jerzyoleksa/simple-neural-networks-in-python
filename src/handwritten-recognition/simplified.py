@@ -8,11 +8,6 @@ import pickle
 class NetSimplified(object):
 
     def __init__(self, sizes):
-        """The list ``sizes`` contains the number of neurons in the
-        respective layers of the network.  For example, if the list
-        was [2, 3, 1] then it would be a three-layer network, with the
-        first layer containing 2 neurons, the second layer 3 neurons,
-        and the third layer 1 neuron."""
         self.num_layers = len(sizes)
         self.sizes = sizes
         
@@ -25,98 +20,54 @@ class NetSimplified(object):
 
 
         #load serialized objects to avoid random values
-        pickle_in = open("dict.pickle","rb")
-        self.weights = pickle.load(pickle_in)        
-        pickle_in = open("dict.pickle2","rb")
-        self.biases = pickle.load(pickle_in)
-       
-        
-       
-        
-#         print(self.biases);
-#         print(self.weights);
-        
-
-        
+        self.weights = loadSer("dict.pickle","rb")
+        self.biases = loadSer("dict.pickle2","rb")
 
 
 
     def train(self, training_data, test_data=None):
-     
-        #jerzy added to solve python 2 -> 3 issues
-        #for DEBUG::
-        test_data = list(test_data)
-        training_data = list(training_data)  
-        if test_data: n_test = len(test_data)
-        n = len(training_data)
 
-
-        pickle_in = open("dict.pickle3","rb")
-        samplearr = pickle.load(pickle_in) 
-        
-        
-
-        
+        samplearr = loadSer("dict.pickle3","rb")
+         
         for k in range(50000): 
              
             sample = samplearr[k]
-
             for x, y in sample:
                        
-                activations, zs = self.feedforward(x, self.biases, self.weights)
+                activations, zs = self.feedforward(x)
                 self.backprop(x, y, self.biases, self.weights, activations, zs)
                 
 
         
-            if k % 5000 == 0 and test_data: print (self.evaluate(test_data), n_test)
+            if k % 5000 == 0 and test_data: print (self.evaluate(test_data),'/', len(test_data))
     
-    #returns last activations only (outputs)
-#     def feedforward(self, a):
-#         for b, w in zip(self.biases, self.weights):
-#             a = sigmoid(np.dot(w, a)+b)
-#         return a
     
-    def feedforward(self, a, biases, weights):
     
-        activations = [a] #init list with the first element a
+    def feedforward(self, a):
+    
+        activations = [a] #init list with a as the first element
         zs = [] # list to store all the z vectors, layer by layer
 
-        for b, w in zip(biases, weights):
+        for b, w in zip(self.biases, self.weights):
             z = np.dot(w, a)+b
-            a = sigmoid(z) #output
-            zs.append(z)
-            activations.append(a) #list of activations
+            a = sigmoid(z)
             
-#         print('a-s:',activations[0].shape,activations[1].shape,activations[2].shape)
-#         print('z-s:',zs[0].shape,zs[1].shape)    
+            zs.append(z)
+            activations.append(a)
+ 
         return (activations, zs)
+
+
 
     def backprop(self, x, y, biases, weights, activations, zs):
 
         bias_change = clone_empty_matrix( biases )
         weight_change = clone_empty_matrix( weights )
 
-
-
-        # backprop
         delta = error_deriv(activations[-1], y) * sigmoid_deriv(zs[-1])
         bias_change[-1] = delta
         weight_change[-1] = np.dot(delta, activations[-2].transpose())
         
-        #-1 means the last layer, the output layer ?
-#         print('1.',delta.shape) #(10, 1)
-#         print('2.',nabla_b[-1].shape) #2. (10, 1)
-#         print('3.',nabla_w[-1].shape) #3. (10, 30)
-#         plt.imshow(delta, interpolation='nearest')
-#         plt.table(cellText=delta,loc='center',cellLoc='center')
-#         plt.show()
-
-        # Note that the variable l in the loop below is used a little
-        # differently to the notation in Chapter 2 of the book.  Here,
-        # l = 1 means the last layer of neurons, l = 2 is the
-        # second-last layer, and so on.  It's a renumbering of the
-        # scheme in the book, used here to take advantage of the fact
-        # that Python can use negative indices in lists.
         for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_deriv(z)
@@ -124,21 +75,16 @@ class NetSimplified(object):
             bias_change[-l] = delta
             weight_change[-l] = np.dot(delta, activations[-l-1].transpose())
             
-#         print("---",mse(activations[-1],y))
-                        #should we move the bias and weight updating into backrop - YES, backprop role is to update weights
         self.biases = list(map(lambda x,y: x - 0.3*y, self.biases, bias_change))        
         self.weights = list(map(lambda x,y: x - 0.3*y, self.weights, weight_change))
         
+        
 
     def evaluate(self, test_data):
-        """Return the number of test inputs for which the neural
-        network outputs the correct result. Note that the neural
-        network's output is assumed to be the index of whichever
-        neuron in the final layer has the highest activation."""
         test_results = []
         for (x, y) in test_data:
             
-            activations, zs = self.feedforward(x, self.biases, self.weights)
+            activations, zs = self.feedforward(x)
             test_results.append((np.argmax(activations[-1]), y))
                         
         return sum(int(x == y) for (x, y) in test_results)
@@ -146,6 +92,10 @@ class NetSimplified(object):
 # def mse(outputs, expected):
 #     return sum((y - t) ** 2 for (y, t) in zip(outputs, expected)) / len(outputs)
 #     
+def loadSer(name, mode):
+    pickle_in = open(name, mode)
+    return pickle.load(pickle_in)
+
 def error_deriv(output_activations, y):
     return (output_activations-y)
 
