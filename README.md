@@ -31,3 +31,4 @@ git: https://github.com/mnielsen/neural-networks-and-deep-learning.git
 - List comprehension provides us with an elegant way of creating lists based on other lists.
 - using deltas/nablas/delta_nablas as variable names makes the equation unrecognizable
 - it is cleaner to place updating weights inside backrop function rather than in update batch function, since by definition backrop main goal is to update weights
+- Author of the article, knowing the MNIST data structure and its specific distribution, implemented nested iterative approach based on batches, however if you flatten the nested loops, you will end up with more recognizable code and still keep the satisfactory efficiency level (90% instead of 95%)
