@@ -8,6 +8,9 @@ training_data, validation_data, test_data = mnist_loader.load_data_wrapper();
 test_data = list(test_data)
 training_data = list(training_data)  
 
+print('training data from MNIST:', len(training_data))
+print('test data from MNIST:', len(test_data))
+
 net = simplified.NetSimplified([784,30,10])
 
 

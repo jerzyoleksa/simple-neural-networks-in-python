@@ -9,10 +9,9 @@ class NetSimplified(object):
 
     def __init__(self, sizes):
         self.num_layers = len(sizes)
-        self.sizes = sizes
         
-#         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
-#         self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
+        self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
+        self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
         
 #         pickle_out = open("dict.pickle2","wb")
 #         pickle.dump(self.biases, pickle_out)
@@ -20,26 +19,19 @@ class NetSimplified(object):
 
 
         #load serialized objects to avoid random values
-        self.weights = loadSer("dict.pickle","rb")
-        self.biases = loadSer("dict.pickle2","rb")
+#         self.weights = loadSer("dict.pickle","rb")
+#         self.biases = loadSer("dict.pickle2","rb")
+#         samplearr = loadSer("dict.pickle3","rb")
+#         sample = samplearr[k]
 
 
+    def train(self, training_data, test_data):
 
-    def train(self, training_data, test_data=None):
-
-        samplearr = loadSer("dict.pickle3","rb")
-         
-        for k in range(50000): 
-             
-            sample = samplearr[k]
-            for x, y in sample:
-                       
-                activations, zs = self.feedforward(x)
-                self.backprop(x, y, self.biases, self.weights, activations, zs)
-                
-
-        
-            if k % 5000 == 0 and test_data: print (self.evaluate(test_data),'/', len(test_data))
+      for i, (x, y) in enumerate(training_data): 
+            activations, zs = self.feedforward(x)
+            self.backprop(x, y, self.biases, self.weights, activations, zs)
+                  
+            if i % 5000 == 0 and test_data: print (self.evaluate(test_data),'/', len(test_data))
     
     
     
